@@ -2,7 +2,7 @@
 > Classify images from the CIFAR-10 dataset using a variety of modern architectures.
 
 ## Project Overview
-This project implements a training and testing pipeline for an image classification task on the CIFAR-10 dataset. CIFAR-10 contains 60,000 32x32 RGB images distributed evenly across 10 image classes (6,000 images per class). The provided dataset splits consists of a train set with 50,000 images and a test set with 10,000 images. Here, the train set is further split into a train set with 45,000 images and a validation set with 5,000 images to allow for model evaluation throughout the training process. The model's implemented in this repository includes a basic CNN, a resnet, and a vision transformer.
+This project implements a training and testing pipeline for an image classification task on the CIFAR-10 dataset. CIFAR-10 contains 60,000 32x32 RGB images distributed evenly across 10 image classes (6,000 images per class). The provided dataset splits consists of a train set with 50,000 images and a test set with 10,000 images. Here, the train set is further split into a train set with 45,000 images and a validation set with 5,000 images to allow for model evaluation throughout the training process. The models implemented in this repository includes a basic CNN, a resnet, and a vision transformer.
 
 ## Setup and Run
 The repository contains both a python script and a Jupyter notebook. Each of their setup/run procedures are detailed below.
@@ -25,6 +25,11 @@ Install required pip packages and dependencies.
 python3 -m pip install requirements.txt
 ```
 
+Login to a wandb account if you'd like to view train logs. (If not, make sure to toggle respective flag when running.)
+```shell
+wandb login
+```
+
 Your local environment should now be suitable to run the main script ```train.py```. You can either run it interactively or use the shell to specify run options.
 
 #### Run Interactively
@@ -34,9 +39,14 @@ python3 train.py
 
 #### Shell
 ```shell
+python3 train.py -m pre-vit -d cuda
+```
+The above command fine tunes a vision transformer pretrained on ImageNet with hyperparameters set to those used in this project (specified in a later section).
+
+```shell
 python3 train.py -m resnet -e 50 -b 128 -l 0.1 -d cuda
 ```
-The above shell command trains a resnet-based model on cuda for 50 epochs with batch size of 128 and initial learning rate of 0.1.
+The above command trains a resnet-based model on cuda for 50 epochs with batch size of 128 and initial learning rate of 0.1.
 
 | Specifier | Usage |
 | --------- | --------- |
@@ -46,6 +56,7 @@ The above shell command trains a resnet-based model on cuda for 50 epochs with b
 | ```-l```, ```--learning-rate``` | learning rate |
 | ```-d```, ```--device``` | device to train/infer on (```cpu```, ```mps```, ```cuda```) |
 | ```-c```, ```--cross-validate``` | flag for training with 5-fold cross-validation |
+| ```-w```, ```--wandb``` | flag for wandb logging |
 | ```-s```, ```--save-folder``` | path to desired model save folder
 
 
@@ -87,6 +98,10 @@ Using the hyperparameters below, the model is capable of achieving ~50% test acc
 | Optimizer | Parameters |
 | --------- | --------- |
 | Adam | Weight Decay: 0.01 |
+
+Below is the wandb log of training the basic CNN model:
+
+![wandb logs from basic cnn training](results/cnn.png)
 
 ### ResNet Architecture
 This implementation utilizes residual connections to improve learning and allow us to build a deeper neural network, all whilst maintaining gradient flow. The original ResNet paper was referred to for implementation and technical details [[1]](#1).
