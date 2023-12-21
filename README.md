@@ -2,14 +2,61 @@
 > Classify images from the CIFAR-10 dataset using a variety of modern architectures.
 
 ## Project Overview
-This notebook implements a training and testing pipeline for an image classification task on the CIFAR-10 dataset. CIFAR-10 contains 60,000 32x32 RGB images distributed evenly across 10 image classes (6,000 images per class). The provided dataset splits consists of a train set with 50,000 images and a test set with 10,000 images. Here, the train set is further split into a train set with 45,000 images and a validation set with 5,000 images to allow for model evaluation throughout the training process. The model's implemented in this repository includes a basic CNN, a resnet, and a vision transformer.
+This project implements a training and testing pipeline for an image classification task on the CIFAR-10 dataset. CIFAR-10 contains 60,000 32x32 RGB images distributed evenly across 10 image classes (6,000 images per class). The provided dataset splits consists of a train set with 50,000 images and a test set with 10,000 images. Here, the train set is further split into a train set with 45,000 images and a validation set with 5,000 images to allow for model evaluation throughout the training process. The model's implemented in this repository includes a basic CNN, a resnet, and a vision transformer.
 
 ## Setup and Run
+The repository contains both a python script and a Jupyter notebook. Each of their setup/run procedures are detailed below.
+
+### Python Script
+Clone the repository.
+```shell
+git clone git@github.com:joe-lin-tech/cifar.git
+cd cifar
+```
+
+Create and activate a virtual environment. (Alternatively, use an existing environment of your choosing.)
+```shell
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Install required pip packages and dependencies.
+```shell
+python3 -m pip install requirements.txt
+```
+
+Your local environment should now be suitable to run the main script ```train.py```. You can either run it interactively or use the shell to specify run options.
+
+#### Run Interactively
+```shell
+python3 train.py
+```
+
+#### Shell
+```shell
+python3 train.py -m resnet -e 50 -b 128 -l 0.1 -d cuda
+```
+The above shell command trains a resnet-based model on cuda for 50 epochs with batch size of 128 and initial learning rate of 0.1.
+
+| Specifier | Usage |
+| --------- | --------- |
+| ```-m```, ```--model``` | choose model architecture (```cnn```, ```resnet```, ```pre-vit```, or ```vit```) |
+| ```-e```, ```--epoch``` | number of epochs |
+| ```-b```, ```--batch-size``` | batch size |
+| ```-l```, ```--learning-rate``` | learning rate |
+| ```-d```, ```--device``` | device to train/infer on (```cpu```, ```mps```, ```cuda```) |
+| ```-c```, ```--cross-validate``` | flag for training with 5-fold cross-validation |
+| ```-s```, ```--save-folder``` | path to desired model save folder
+
+
+### Jupyter Notebook
 Download the Jupyter notebook and run the first cell to import relevant packages. The following Python packages are used for this project and may need to be installed directly (if not installed in current environment) with ```!pip install <package name>```.
 
 - **General Purpose:** For shuffling and seeding random processes, use ```random```. To read and write to local file system, use ```os```.
 - **Data Manipulation:** Use ```numpy``` to represent and manipulate data.
 - **Machine Learning:** Use ```torch``` and ```torchvision```, which are suitable for Computer Vision tasks. For logging the training loop, use ```wandb```.
+
+Run the remaining cells to execute the training procedure of the latest notebook version (pretrained vision transformer).
 
 ## Model Architecture and Training
 This project involved implementing and training several modern model architectures, each of which are detailed below.
@@ -37,6 +84,10 @@ Using the hyperparameters below, the model is capable of achieving ~50% test acc
 | BATCH_SIZE | 128 |
 | LEARNING_RATE | 1e-4 |
 
+| Optimizer | Parameters |
+| --------- | --------- |
+| Adam | Weight Decay: 0.01 |
+
 ### ResNet Architecture
 This implementation utilizes residual connections to improve learning and allow us to build a deeper neural network, all whilst maintaining gradient flow. The original ResNet paper was referred to for implementation and technical details [[1]](#1).
 
@@ -44,7 +95,7 @@ Using the hyperparameters below, the model is capable of achieving ~91% test acc
 
 | Hyperparameter | Value |
 | --------- | --------- |
-| EPOCHS | 100 |
+| EPOCHS | 50 |
 | BATCH_SIZE | 128 |
 | LEARNING_RATE | 0.1 |
 
@@ -56,6 +107,10 @@ Using the hyperparameters below, the model is capable of achieving ~91% test acc
 | --------- | --------- |
 | ReduceLROnPlateau | Mode: max <br> Factor: 0.1 <br> Patience: 3 <br> Threshold: 1e-3 |
 
+Below is the wandb log of training the ResNet model:
+
+![wandb logs from resnet training](results/resnet.png)
+
 ### Vision Transformer
 The final implementation harnesses the expressive capabilities of transformers, especially with its utilization of self-attention [[2]](#2). Note that instead of patchifying the image and linear projecting, a convolutional layer is applied to obtain patch embeddings. This modification helps "increase optimization stability and also improves peak performance" as described in [[3]](#3).
 
@@ -65,8 +120,8 @@ Using the hyperparameters below, the pretrained vision transformer can be fine t
 
 | Hyperparameter | Value |
 | --------- | --------- |
-| EPOCHS | 100 |
-| BATCH_SIZE | 128 |
+| EPOCHS | 10 |
+| BATCH_SIZE | 32 |
 | LEARNING_RATE | 1e-4 |
 
 | Optimizer | Parameters |
@@ -77,7 +132,7 @@ Using the hyperparameters below, the pretrained vision transformer can be fine t
 | --------- | --------- |
 | CosineAnnealingLR | T_max: 10 |
 
-The same hyperparameters are used to train a vision transformer from scratch except the learning rate is reduced to 1e-5.
+The same hyperparameters are used to train a vision transformer from scratch except the learning rate is reduced to 1e-5, a different learning rate scheduler was used, and longer training time (details to be added soon).
 
 Below is the wandb log of losses and learning rate for both of these training sessions (fine tune and from scratch):
 
