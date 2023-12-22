@@ -41,6 +41,7 @@ parser.add_argument('-d', '--device', choices=['cpu', 'mps', 'cuda'], default='c
 parser.add_argument('-c', '--cross-validate', action='store_true', help='enable 5-fold cross validation')
 parser.add_argument('-w', '--wandb', dest='logging', action='store_true', help='enable wandb logging')
 parser.add_argument('-s', '--save-folder', type=str, default='', help='path to save folder')
+parser.add_argument('-f', '--ckpt-frequency', type=int, default=0, help='model checkpoint save frequency')
 
 args = parser.parse_args()
 params = { arg: getattr(args, arg) for arg in vars(args) if getattr(args, arg) is not None }
@@ -53,7 +54,7 @@ if model is None:
         'Vision Transformer (pretrained on ImageNet)': "previt",
         'Vision Transformer': "vit"
     }
-    
+
     model = models[prompt({
         'type': 'list',
         'name': 'model',
@@ -98,6 +99,12 @@ if model is None:
         'name': 'save_folder',
         'message': 'Input path to save folder. (Leave blank for current directory)'
     })['save_folder']
+
+    ckpt_frequency = prompt({
+        'type': 'input',
+        'name': 'ckpt_frequency',
+        'message': 'Input model checkpoint save frequency in number of epochs. (Input 0 to only save final model)'
+    })['ckpt_frequency']
 
     params = { **params, "device": device, "cross_validate": "5-Fold Cross Validation" in options,
               "logging": "Wandb Logging" in options, "save_folder": save_folder }
