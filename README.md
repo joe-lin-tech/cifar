@@ -57,7 +57,7 @@ The above command trains a resnet-based model on cuda for 50 epochs with batch s
 | ```-d```, ```--device``` | device to train/infer on (```cpu```, ```mps```, ```cuda```) |
 | ```-c```, ```--cross-validate``` | flag for training with 5-fold cross-validation |
 | ```-w```, ```--wandb``` | flag for wandb logging |
-| ```-s```, ```--save-folder``` | path to desired model save folder
+| ```-s```, ```--save-folder``` | path to desired model save folder |
 
 
 ### Jupyter Notebook
