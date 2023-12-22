@@ -55,9 +55,9 @@ The above command trains a resnet-based model on cuda for 50 epochs with batch s
 | ```-b```, ```--batch-size``` | batch size |
 | ```-l```, ```--learning-rate``` | learning rate |
 | ```-d```, ```--device``` | device to train/infer on (```cpu```, ```mps```, ```cuda```) |
-| ```-c```, ```--cross-validate``` | flag for training with 5-fold cross-validation |
-| ```-w```, ```--wandb``` | flag for wandb logging |
-| ```-s```, ```--save-folder``` | path to desired model save folder |
+| ```-c```, ```--cross-validate``` | flag for training with 5-fold cross-validation (default: False) |
+| ```-w```, ```--wandb``` | flag for wandb logging (default: False) |
+| ```-s```, ```--save-folder``` | path to desired model save folder (default: current working directory) |
 
 
 ### Jupyter Notebook
