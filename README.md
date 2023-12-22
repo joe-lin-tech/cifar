@@ -41,12 +41,12 @@ python3 train.py
 ```shell
 python3 train.py -m previt -d cuda
 ```
-The above command fine tunes a vision transformer pretrained on ImageNet with hyperparameters set to those used in this project.
+The above command fine tunes a vision transformer pretrained on ImageNet with hyperparameters set to those used in this project. For reproducibility tests, specifying ```shell -m``` and ```shell -d``` like above will be sufficient. Additional specifiers detailed below.
 
 ```shell
 python3 train.py -m resnet -e 50 -b 128 -l 0.1 -d cuda
 ```
-The above command trains a resnet-based model on cuda for 50 epochs with batch size of 128 and initial learning rate of 0.1.
+As an example of a more customized run, the above command trains a resnet-based model on cuda for 50 epochs with batch size of 128 and initial learning rate of 0.1.
 
 | Specifier | Usage |
 | --------- | --------- |
@@ -58,6 +58,7 @@ The above command trains a resnet-based model on cuda for 50 epochs with batch s
 | ```-c```, ```--cross-validate``` | flag for training with 5-fold cross-validation (default: False) |
 | ```-w```, ```--wandb``` | flag for wandb logging (default: False) |
 | ```-s```, ```--save-folder``` | path to desired model save folder (default: current working directory) |
+| ```-f```, ```--ckpt-frequency``` | how often to save model checkpoint, in number of epochs (default: 0, only save final model) |
 
 
 ### Jupyter Notebook
@@ -70,7 +71,6 @@ Download the Jupyter notebook and run the first cell to import relevant packages
 Run the remaining cells to execute the training procedure of the latest notebook version (pretrained vision transformer).
 
 ## Model Architecture and Training
-This project involved implementing and training several modern model architectures, each of which are detailed below.
 
 ### Basic CNN Architecture
 This implementation consists of 3 convolutional layers (conv + relu + max pool) and a fully connected network.
