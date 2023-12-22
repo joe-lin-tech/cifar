@@ -33,7 +33,7 @@ torch.backends.cudnn.benchmark = True
 
 
 parser = ArgumentParser(prog='train.py', description='Train a deep learning classifier for CIFAR-10 images.')
-parser.add_argument('-m', '--model', choices=['cnn', 'resnet', 'pre-vit', 'vit'], help='class of model to train')
+parser.add_argument('-m', '--model', choices=['cnn', 'resnet', 'previt', 'vit'], help='class of model to train')
 parser.add_argument('-e', '--epochs', type=int, help='number of epochs')
 parser.add_argument('-b', '--batch-size', type=int, help='batch size')
 parser.add_argument('-l', '--learning-rate', type=float, help='learning rate')
@@ -47,13 +47,19 @@ params = { arg: getattr(args, arg) for arg in vars(args) if getattr(args, arg) i
 model = args.model
 
 if model is None:
-    models = ['Basic Convolutional Neural Network', 'ResNet', 'Vision Transformer (pretrained on ImageNet)', 'Vision Transformer']
-    model = prompt({
+    models = {
+        'Basic Convolutional Neural Network': "cnn",
+        'ResNet': "resnet",
+        'Vision Transformer (pretrained on ImageNet)': "previt",
+        'Vision Transformer': "vit"
+    }
+    
+    model = models[prompt({
         'type': 'list',
         'name': 'model',
         'message': 'Select a model architecture. (Use arrow keys)',
-        'choices': models
-    })['model']
+        'choices': models.keys()
+    })['model']]
 
     hyperparameters = [
         { 'type': 'input', 'name': 'epochs', 'message': 'Input number of epochs.', 'default': '20' },
@@ -61,10 +67,10 @@ if model is None:
         { 'type': 'input', 'name': 'learning_rate', 'message': 'Input a learning rate.', 'default': '0.0001' }
     ]
     
-    if model == models[1]:
+    if model == "resnet":
         hyperparameters[0]['default'] = '50'
         hyperparameters[2]['default'] = '0.1'
-    elif model == models[2] or model == models[3]:
+    elif model == "previt" or model == "vit":
         hyperparameters[0]['default'] = '10'
         hyperparameters[1]['default'] = '32'
     
@@ -103,10 +109,10 @@ params.pop('cross_validate', None)
 params.pop('model', None)
 params['fold'] = -1
 
-if model == 'pre-vit':
+if model == 'previt':
     params['pretrained'] = True
 
-train_functions = dict(cnn=train_cnn, resnet=train_resnet, vit=train_vit)
+train_functions = dict(cnn=train_cnn, resnet=train_resnet, previt=train_vit, vit=train_vit)
 
 if cross_validate:
     for i in range(5):

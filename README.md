@@ -22,7 +22,7 @@ source venv/bin/activate
 
 Install required pip packages and dependencies.
 ```shell
-python3 -m pip install requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 Login to a wandb account if you'd like to view train logs. (If not, make sure to toggle respective flag when running.)
@@ -37,11 +37,11 @@ Your local environment should now be suitable to run the main script ```train.py
 python3 train.py
 ```
 
-#### Shell
+#### Run in the Shell
 ```shell
-python3 train.py -m pre-vit -d cuda
+python3 train.py -m previt -d cuda
 ```
-The above command fine tunes a vision transformer pretrained on ImageNet with hyperparameters set to those used in this project (specified in a later section).
+The above command fine tunes a vision transformer pretrained on ImageNet with hyperparameters set to those used in this project.
 
 ```shell
 python3 train.py -m resnet -e 50 -b 128 -l 0.1 -d cuda
@@ -50,7 +50,7 @@ The above command trains a resnet-based model on cuda for 50 epochs with batch s
 
 | Specifier | Usage |
 | --------- | --------- |
-| ```-m```, ```--model``` | choose model architecture (```cnn```, ```resnet```, ```pre-vit```, or ```vit```) |
+| ```-m```, ```--model``` | choose model architecture (```cnn```, ```resnet```, ```previt```, or ```vit```) |
 | ```-e```, ```--epoch``` | number of epochs |
 | ```-b```, ```--batch-size``` | batch size |
 | ```-l```, ```--learning-rate``` | learning rate |
