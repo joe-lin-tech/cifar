@@ -21,6 +21,9 @@ def validate_params(params):
     if not os.path.exists(params['save_folder']) and params['save_folder'] != "":
         print("Error: Save folder path must be a valid directory.")
         exit(1)
+    if "ckpt_frequency" in params and params['ckpt_frequency'] < 0:
+        print("Error: Checkpoint frequency must be positive.")
+        exit(1)
 
 SEED = 2023
 random.seed(SEED)
@@ -103,11 +106,12 @@ if model is None:
     ckpt_frequency = prompt({
         'type': 'input',
         'name': 'ckpt_frequency',
-        'message': 'Input model checkpoint save frequency in number of epochs. (Input 0 to only save final model)'
+        'message': 'Input model checkpoint save frequency in number of epochs. (Input 0 to only save final model)',
+        'default': '0'
     })['ckpt_frequency']
 
     params = { **params, "device": device, "cross_validate": "5-Fold Cross Validation" in options,
-              "logging": "Wandb Logging" in options, "save_folder": save_folder }
+              "logging": "Wandb Logging" in options, "save_folder": save_folder, "ckpt_frequency": int(ckpt_frequency) }
     
 validate_params(params)
     
